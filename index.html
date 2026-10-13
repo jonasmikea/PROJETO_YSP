@@ -1,13 +1,1766 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ysp-app</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You Save Play (YSP) — Download Desktop & Versão Mobile</title>
+  <meta name="description" content="Baixe músicas MP3 e vídeos MP4 em alta qualidade com capas automáticas, reprodutor integrado e miniplayer vinil neon. Sem instalações complexas.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-profundo: #090a0d;
+      --bg-card: #12141a;
+      --bg-card-hover: #171a22;
+      --bg-secundario: #1a1d26;
+      --laranja-neon: #ff4726;
+      --laranja-gradiente: linear-gradient(135deg, #ff4726 0%, #ff7a45 100%);
+      --laranja-brilho: rgba(255, 71, 38, 0.35);
+      --borda-suave: rgba(255, 255, 255, 0.08);
+      --borda-laranja: rgba(255, 71, 38, 0.3);
+      --texto-primario: #f3f4f6;
+      --texto-secundario: #9ca3af;
+      --texto-mutado: #6b7280;
+      --sucesso: #10b981;
+      --aviso: #f59e0b;
+      --azul-destaque: #3b82f6;
+      --sombra-card: 0 16px 40px -10px rgba(0, 0, 0, 0.6);
+      --sombra-neon: 0 0 25px rgba(255, 71, 38, 0.45);
+      --sombra-neon-sm: 0 0 12px rgba(255, 71, 38, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-profundo);
+      color: var(--texto-primario);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 71, 38, 0.12) 0%, rgba(9, 10, 13, 0) 70%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    header.cabecalho-principal {
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(9, 10, 13, 0.88);
+      border-bottom: 1px solid var(--borda-suave);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .nav-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 76px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-icone {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-card);
+      border: 1px solid var(--borda-laranja);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--laranja-neon);
+      box-shadow: var(--sombra-neon-sm);
+    }
+
+    .logo-texto span {
+      color: var(--laranja-neon);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--texto-secundario);
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--texto-primario);
+    }
+
+    .btn-acao {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-laranja {
+      background: var(--laranja-gradiente);
+      color: #fff;
+      box-shadow: 0 4px 20px var(--laranja-brilho);
+    }
+
+    .btn-laranja:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(255, 71, 38, 0.55);
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--borda-suave);
+      color: var(--texto-primario);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .hero-secao {
+      padding: 80px 0 60px;
+      text-align: center;
+      position: relative;
+    }
+
+    .badge-destaque {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(255, 71, 38, 0.1);
+      border: 1px solid var(--borda-laranja);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--laranja-neon);
+      margin-bottom: 24px;
+    }
+
+    .badge-destaque .ponto-verde {
+      width: 8px;
+      height: 8px;
+      background: var(--sucesso);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--sucesso);
+    }
+
+    .hero-titulo {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      max-width: 900px;
+      margin: 0 auto 20px;
+    }
+
+    .hero-titulo span {
+      background: var(--laranja-gradiente);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitulo {
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      color: var(--texto-secundario);
+      max-width: 740px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+    }
+
+    .hero-acoes {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 50px;
+    }
+
+    .hero-detalhe-download {
+      font-size: 0.82rem;
+      color: var(--texto-mutado);
+      margin-top: -24px;
+      margin-bottom: 40px;
+    }
+
+    .mockup-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #0f1117;
+      border: 1px solid var(--borda-suave);
+      border-radius: 20px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 50px rgba(255, 71, 38, 0.15);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .mockup-janela-topo {
+      height: 38px;
+      background: #090a0d;
+      border-bottom: 1px solid var(--borda-suave);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+    }
+
+    .bolinha-janela {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .b-vermelha { background: #ef4444; }
+    .b-amarela { background: #f59e0b; }
+    .b-verde { background: #10b981; }
+
+    .mockup-janela-titulo {
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 0.78rem;
+      color: var(--texto-mutado);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .mockup-corpo {
+      display: grid;
+      grid-template-columns: 68px 1fr;
+      min-height: 480px;
+      background: #0d0f14;
+    }
+
+    .mockup-dock {
+      background: #0a0b0f;
+      border-right: 1px solid var(--borda-suave);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0;
+      gap: 16px;
+    }
+
+    .dock-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--texto-secundario);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dock-icon.ativo {
+      background: rgba(255, 71, 38, 0.15);
+      color: var(--laranja-neon);
+      border: 1px solid var(--borda-laranja);
+    }
+
+    .mockup-conteudo {
+      display: flex;
+      flex-direction: column;
+      padding: 24px 30px;
+      position: relative;
+      text-align: left;
+    }
+
+    .mockup-header-search {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .mockup-input {
+      flex: 1;
+      background: #14161f;
+      border: 1px solid var(--borda-suave);
+      border-radius: 14px;
+      padding: 12px 18px;
+      color: #fff;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .mockup-btn-search {
+      background: var(--laranja-gradiente);
+      border: none;
+      color: #fff;
+      padding: 0 20px;
+      border-radius: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .mockup-grade-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 70px;
+    }
+
+    .mockup-card-midia {
+      background: #141720;
+      border: 1px solid var(--borda-suave);
+      border-radius: 14px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .mockup-card-midia:hover, .mockup-card-midia.tocando {
+      border-color: var(--laranja-neon);
+      transform: translateY(-2px);
+    }
+
+    .mockup-capa-midia {
+      width: 100%;
+      height: 105px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1f2330 0%, #151821 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mockup-badge-ext {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: rgba(0,0,0,0.7);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--laranja-neon);
+    }
+
+    .mockup-card-info h4 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mockup-card-info p {
+      font-size: 0.72rem;
+      color: var(--texto-secundario);
+    }
+
+    .mockup-miniplayer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: #090a0e;
+      border-top: 1px solid var(--borda-suave);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 10;
+    }
+
+    .mockup-player-esq {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .disco-vinil-mini {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ff4726 15%, #18191f 20%, #000 65%);
+      border: 2px solid var(--laranja-neon);
+      animation: girar 4s linear infinite;
+      box-shadow: 0 0 10px var(--laranja-brilho);
+    }
+
+    @keyframes girar {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .mockup-player-centro {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-play-neon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--laranja-gradiente);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      box-shadow: var(--sombra-neon);
+      cursor: pointer;
+    }
+
+    .mockup-barra-progresso {
+      width: 140px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .mockup-progresso-ativo {
+      width: 65%;
+      height: 100%;
+      background: var(--laranja-neon);
+      border-radius: 4px;
+    }
+
+    .secao-recursos {
+      padding: 100px 0 60px;
+    }
+
+    .secao-cabecalho {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .secao-subtitulo-tag {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+      color: var(--laranja-neon);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .secao-titulo {
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .grade-recursos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 24px;
+    }
+
+    .card-recurso {
+      background: var(--bg-card);
+      border: 1px solid var(--borda-suave);
+      border-radius: 20px;
+      padding: 32px 24px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-recurso::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: transparent;
+      transition: background 0.3s ease;
+    }
+
+    .card-recurso:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--borda-laranja);
+      transform: translateY(-4px);
+      box-shadow: var(--sombra-card);
+    }
+
+    .card-recurso:hover::before {
+      background: var(--laranja-gradiente);
+    }
+
+    .icone-recurso {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: rgba(255, 71, 38, 0.1);
+      border: 1px solid var(--borda-laranja);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--laranja-neon);
+      margin-bottom: 22px;
+    }
+
+    .card-recurso h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .card-recurso p {
+      font-size: 0.92rem;
+      color: var(--texto-secundario);
+      line-height: 1.6;
+    }
+
+    .secao-mobile {
+      padding: 60px 0 80px;
+    }
+
+    .banner-mobile {
+      background: linear-gradient(135deg, #131620 0%, #0d0f14 100%);
+      border: 1px solid var(--borda-suave);
+      border-radius: 28px;
+      padding: 50px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 40px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .banner-mobile::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(255, 71, 38, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .mobile-info h2 {
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 800;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .mobile-info p {
+      font-size: 1rem;
+      color: var(--texto-secundario);
+      margin-bottom: 28px;
+    }
+
+    .form-aviso-mobile {
+      display: flex;
+      gap: 10px;
+      max-width: 440px;
+    }
+
+    .form-aviso-mobile input {
+      flex: 1;
+      background: #090a0e;
+      border: 1px solid var(--borda-suave);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #fff;
+      font-size: 0.92rem;
+      outline: none;
+    }
+
+    .form-aviso-mobile input:focus {
+      border-color: var(--laranja-neon);
+    }
+
+    .mockup-celular {
+      width: 240px;
+      height: 440px;
+      margin: 0 auto;
+      background: #090a0d;
+      border: 6px solid #232734;
+      border-radius: 36px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 30px rgba(255, 71, 38, 0.2);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .celular-notch {
+      width: 80px;
+      height: 16px;
+      background: #232734;
+      border-radius: 0 0 10px 10px;
+      margin: -16px auto 14px;
+    }
+
+    .celular-mini-app {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .celular-item {
+      background: #141722;
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--borda-suave);
+    }
+
+    .celular-item-capa {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--laranja-gradiente);
+    }
+
+    .secao-roadmap {
+      padding: 80px 0;
+    }
+
+    .linha-tempo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .card-fase {
+      background: var(--bg-card);
+      border: 1px solid var(--borda-suave);
+      border-radius: 20px;
+      padding: 28px;
+      position: relative;
+    }
+
+    .card-fase.atual {
+      border-color: var(--laranja-neon);
+      background: linear-gradient(180deg, rgba(255, 71, 38, 0.04) 0%, var(--bg-card) 100%);
+    }
+
+    .fase-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      margin-bottom: 14px;
+    }
+
+    .card-fase.atual .fase-badge {
+      background: var(--laranja-neon);
+      color: #fff;
+    }
+
+    .card-fase h4 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+    }
+
+    .card-fase ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      color: var(--texto-secundario);
+      font-size: 0.88rem;
+    }
+
+    .card-fase li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .card-fase li svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .secao-feedback {
+      padding: 80px 0 100px;
+      background: linear-gradient(180deg, transparent 0%, rgba(18, 20, 26, 0.5) 100%);
+    }
+
+    .feedback-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 40px;
+      align-items: flex-start;
+    }
+
+    .feedback-form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--borda-suave);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: var(--sombra-card);
+    }
+
+    .form-grupo {
+      margin-bottom: 18px;
+    }
+
+    .form-grupo label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--texto-secundario);
+    }
+
+    .form-controle {
+      width: 100%;
+      background: #090a0d;
+      border: 1px solid var(--borda-suave);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #fff;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-controle:focus {
+      border-color: var(--laranja-neon);
+    }
+
+    textarea.form-controle {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .feedback-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .feed-controles {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .feed-filtros {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-filtro {
+      background: #090a0e;
+      border: 1px solid var(--borda-suave);
+      color: var(--texto-secundario);
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-filtro.ativo {
+      background: rgba(255, 71, 38, 0.15);
+      border-color: var(--borda-laranja);
+      color: var(--laranja-neon);
+    }
+
+    .card-item-feedback {
+      background: var(--bg-card);
+      border: 1px solid var(--borda-suave);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: aparecer 0.3s ease;
+    }
+
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .item-feedback-topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tag-status {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .tag-bug { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .tag-sugestao { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+    .tag-outro { background: rgba(156, 163, 175, 0.15); color: #9ca3af; }
+
+    .tag-resolvido { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .tag-analise { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+
+    .item-feedback-titulo {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .item-feedback-desc {
+      font-size: 0.88rem;
+      color: var(--texto-secundario);
+      line-height: 1.5;
+    }
+
+    .item-feedback-rodape {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid var(--borda-suave);
+      font-size: 0.78rem;
+      color: var(--texto-mutado);
+    }
+
+    .btn-votar {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--borda-suave);
+      color: var(--texto-primario);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-votar:hover {
+      border-color: var(--laranja-neon);
+      color: var(--laranja-neon);
+    }
+
+    footer.rodape-principal {
+      background: #07080a;
+      border-top: 1px solid var(--borda-suave);
+      padding: 60px 0 30px;
+    }
+
+    .rodape-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+
+    .rodape-sobre p {
+      color: var(--texto-secundario);
+      font-size: 0.9rem;
+      max-width: 380px;
+      margin-top: 14px;
+    }
+
+    .rodape-coluna h5 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    .rodape-coluna ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: var(--texto-secundario);
+    }
+
+    .rodape-coluna a:hover {
+      color: var(--laranja-neon);
+    }
+
+    .rodape-copy {
+      text-align: center;
+      padding-top: 24px;
+      border-top: 1px solid var(--borda-suave);
+      font-size: 0.82rem;
+      color: var(--texto-mutado);
+    }
+
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast-card {
+      background: var(--bg-card);
+      border: 1px solid var(--borda-laranja);
+      border-radius: 14px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--sombra-card), var(--sombra-neon-sm);
+      animation: slideIn 0.3s ease;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      pointer-events: auto;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(50px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+      }
+      .banner-mobile {
+        grid-template-columns: 1fr;
+        padding: 36px 24px;
+      }
+      .feedback-grid {
+        grid-template-columns: 1fr;
+      }
+      .rodape-grid {
+        grid-template-columns: 1fr;
+      }
+      .mockup-corpo {
+        grid-template-columns: 50px 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="cabecalho-principal">
+    <div class="container nav-wrapper">
+      <a href="#" class="logo-container">
+        <div class="logo-icone">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+        <div class="logo-texto">YOU SAVE <span>PLAY</span></div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#recursos">Recursos</a></li>
+        <li><a href="#mockup">Interface</a></li>
+        <li><a href="#mobile">Mobile</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#feedback">Bugs & Sugestões</a></li>
+      </ul>
+
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <a 
+          href="https://github.com/jonasmikea/PROJETO_YSP/releases/download/v1.0.1/You-Save-Play-Setup-1.0.1.exe" 
+          download="You-Save-Play-Setup-1.0.1.exe"
+          class="btn-acao btn-laranja"
+          title="Download direto do executável Windows"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Baixar v1.0.1 (.exe)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero-secao">
+    <div class="container">
+      <div class="badge-destaque">
+        <span class="ponto-verde"></span>
+        Versão 1.0.1 Estável com Python & FFmpeg 100% Embutidos
+      </div>
+
+      <h1 class="hero-titulo">
+        O seu centro definitivo de <span>download e reprodução</span> de mídias.
+      </h1>
+
+      <p class="hero-subtitulo">
+        Transfira músicas (MP3) e vídeos (MP4) do YouTube com capas automáticas em alta definição. Desfrute de biblioteca inteligente, miniplayer estilo vinil retrô e reprodutor completo sem complicações.
+      </p>
+
+      <div class="hero-acoes">
+        <a 
+          href="https://github.com/jonasmikea/PROJETO_YSP/releases/download/v1.0.1/You-Save-Play-Setup-1.0.1.exe" 
+          download="You-Save-Play-Setup-1.0.1.exe"
+          class="btn-acao btn-laranja" 
+          style="padding: 14px 32px; font-size: 1.05rem;"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Baixar para Windows (64-bit)
+        </a>
+        <a href="#mobile" class="btn-acao btn-outline" style="padding: 14px 28px; font-size: 1.05rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+          </svg>
+          Em breve no Mobile
+        </a>
+      </div>
+
+      <div class="hero-detalhe-download">
+        Download direto do instalador NSIS • 100% livre de configurações manuais
+      </div>
+
+      <!-- Mockup da Interface do Aplicativo YSP -->
+      <div class="mockup-wrapper" id="mockup">
+        <div class="mockup-janela-topo">
+          <div class="bolinha-janela b-vermelha"></div>
+          <div class="bolinha-janela b-amarela"></div>
+          <div class="bolinha-janela b-verde"></div>
+          <div class="mockup-janela-titulo">You Save Play - v1.0.1 (Ambiente Autônomo)</div>
+        </div>
+
+        <div class="mockup-corpo">
+          <div class="mockup-dock">
+            <div class="dock-icon ativo" title="Transferir Mídias">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
+                <polyline points="7 11 12 16 17 11"></polyline>
+                <line x1="12" y1="4" x2="12" y2="16"></line>
+              </svg>
+            </div>
+            <div class="dock-icon" title="Biblioteca">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+              </svg>
+            </div>
+            <div class="dock-icon" title="Playlists">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+              </svg>
+            </div>
+          </div>
+
+          <div class="mockup-conteudo">
+            <div class="mockup-header-search">
+              <input type="text" class="mockup-input" placeholder="Cole qualquer link do YouTube ou pesquisa aqui..." value="https://www.youtube.com/watch?v=..." readonly>
+              <button class="mockup-btn-search">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                Buscar
+              </button>
+            </div>
+
+            <div class="mockup-grade-cards">
+              <div class="mockup-card-midia tocando">
+                <div class="mockup-capa-midia">
+                  <span class="mockup-badge-ext">MP3 320k</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--laranja-neon)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                  </svg>
+                </div>
+                <div class="mockup-card-info">
+                  <h4>Sintonia Synthwave Retro</h4>
+                  <p>YSP Soundscape • 03:45</p>
+                </div>
+              </div>
+
+              <div class="mockup-card-midia">
+                <div class="mockup-capa-midia">
+                  <span class="mockup-badge-ext">MP4 1080p</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                    <line x1="7" y1="2" x2="7" y2="22"></line>
+                    <line x1="17" y1="2" x2="17" y2="22"></line>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                  </svg>
+                </div>
+                <div class="mockup-card-info">
+                  <h4>Cyberpunk City Loop</h4>
+                  <p>Neon Visuals • 10:00</p>
+                </div>
+              </div>
+
+              <div class="mockup-card-midia">
+                <div class="mockup-capa-midia">
+                  <span class="mockup-badge-ext">MP3 192k</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18V5l12-2v13"></path>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <circle cx="18" cy="16" r="3"></circle>
+                  </svg>
+                </div>
+                <div class="mockup-card-info">
+                  <h4>Chillhop Beats to Relax</h4>
+                  <p>Lofi Station • 02:30</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mockup-miniplayer">
+              <div class="mockup-player-esq">
+                <div class="disco-vinil-mini"></div>
+                <div>
+                  <strong style="font-size: 0.82rem; display: block;">Sintonia Synthwave Retro</strong>
+                  <span style="font-size: 0.7rem; color: var(--texto-secundario);">Tocando agora • MP3</span>
+                </div>
+              </div>
+              <div class="mockup-player-centro">
+                <button class="btn-play-neon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="6" y="4" width="4" height="16"></rect>
+                    <rect x="14" y="4" width="4" height="16"></rect>
+                  </svg>
+                </button>
+                <div class="mockup-barra-progresso">
+                  <div class="mockup-progresso-ativo"></div>
+                </div>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--laranja-neon); font-weight: 700;">
+                02:26 / 03:45
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao-recursos" id="recursos">
+    <div class="container">
+      <div class="secao-cabecalho">
+        <span class="secao-subtitulo-tag">Engenharia Autônoma</span>
+        <h2 class="secao-titulo">Feito para quem ama música e praticidade</h2>
+      </div>
+
+      <div class="grade-recursos">
+        <div class="card-recurso">
+          <div class="icone-recurso">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+              <line x1="6" y1="6" x2="6.01" y2="6"></line>
+              <line x1="6" y1="18" x2="6.01" y2="18"></line>
+            </svg>
+          </div>
+          <h3>Python & FFmpeg Embutidos</h3>
+          <p>Diga adeus à necessidade de configurar PATH ou instalar pacotes adicionais. O YSP vem com seu próprio runtime portátil isolado.</p>
+        </div>
+
+        <div class="card-recurso">
+          <div class="icone-recurso">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </div>
+          <h3>Miniplayer Vinil & Anel Neon</h3>
+          <p>Miniplayer persistente na parte inferior com efeito de disco vinil retrô giratório, controle fino de volume e suporte a tela cheia para vídeos MP4.</p>
+        </div>
+
+        <div class="card-recurso">
+          <div class="icone-recurso">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </div>
+          <h3>Playlists & Favoritos Automáticos</h3>
+          <p>Crie coleções personalizadas ou aperte o coração no miniplayer para adicionar à playlist inteligente "Músicas Favoritas" instantaneamente.</p>
+        </div>
+
+        <div class="card-recurso">
+          <div class="icone-recurso">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+            </svg>
+          </div>
+          <h3>Atualizações Automáticas Silenciosas</h3>
+          <p>Sincronizado com o GitHub Releases. Novas versões e melhorias são baixadas em segundo plano para você atualizar em apenas um clique.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao-mobile" id="mobile">
+    <div class="container">
+      <div class="banner-mobile">
+        <div class="mobile-info">
+          <span class="secao-subtitulo-tag">Nova Fronteira</span>
+          <h2>O You Save Play está chegando ao seu smartphone.</h2>
+          <p>
+            Estamos projetando a versão móvel para Android (APK direto e Play Store) e iOS. Reprodução offline com tela apagada, economia de dados e sincronização de playlists com o aplicativo desktop.
+          </p>
+
+          <form class="form-aviso-mobile" id="formMobile">
+            <input type="email" id="emailMobile" placeholder="Digite seu melhor e-mail..." required>
+            <button type="submit" class="btn-acao btn-laranja">Avise-me</button>
+          </form>
+          <span style="display:block; font-size:0.75rem; color:var(--texto-mutado); margin-top:10px;">Prometemos zero spam. Apenas o aviso de lançamento do APK.</span>
+        </div>
+
+        <div>
+          <div class="mockup-celular">
+            <div class="celular-notch"></div>
+            <div class="celular-mini-app">
+              <div style="font-size:0.75rem; font-weight:800; color:var(--laranja-neon); margin-bottom:4px;">YSP MOBILE PREVIEW</div>
+              <div class="celular-item">
+                <div class="celular-item-capa"></div>
+                <div style="font-size:0.7rem;">
+                  <strong>Playlist Offline</strong>
+                  <div style="color:var(--texto-mutado);">24 faixas salvas</div>
+                </div>
+              </div>
+              <div class="celular-item">
+                <div class="celular-item-capa" style="background:#3b82f6;"></div>
+                <div style="font-size:0.7rem;">
+                  <strong>Favoritas</strong>
+                  <div style="color:var(--texto-mutado);">Pronto para tocar</div>
+                </div>
+              </div>
+            </div>
+            <div style="text-align:center; font-size:0.65rem; color:var(--texto-mutado);">
+              Android 10+ / iOS 15+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao-roadmap" id="roadmap">
+    <div class="container">
+      <div class="secao-cabecalho">
+        <span class="secao-subtitulo-tag">Evolução Contínua</span>
+        <h2 class="secao-titulo">Roadmap do Projeto</h2>
+      </div>
+
+      <div class="linha-tempo">
+        <div class="card-fase">
+          <span class="fase-badge">v1.0.0 (Concluída)</span>
+          <h4>Lançamento Inicial</h4>
+          <ul>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sucesso)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Core com Electron + Vue.js
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sucesso)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Download MP3 e MP4 via yt-dlp
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sucesso)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Miniplayer retrô e visualizador de vídeo
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-fase atual">
+          <span class="fase-badge">v1.0.1 (Atual)</span>
+          <h4>Totalmente Autônomo</h4>
+          <ul>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--laranja-neon)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Python e FFmpeg embutidos em extraResources
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--laranja-neon)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Auto-update funcional via GitHub Releases
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--laranja-neon)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Playlist persistente de Favoritos
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-fase">
+          <span class="fase-badge">v1.1.0 (Em Desenvolvimento)</span>
+          <h4>Recursos Pro Desktop</h4>
+          <ul>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--azul-destaque)" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle></svg>
+              Atalhos globais de teclado multimídia
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--azul-destaque)" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle></svg>
+              Equalizador gráfico de áudio de 10 bandas
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--azul-destaque)" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle></svg>
+              Exportação e importação de listas M3U
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-fase">
+          <span class="fase-badge">v2.0.0 (Planejado)</span>
+          <h4>Ecossistema YSP Mobile</h4>
+          <ul>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--texto-mutado)" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle></svg>
+              Aplicativo nativo Android (APK gratuito)
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--texto-mutado)" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle></svg>
+              Sincronização em rede local (Wi-Fi Sync)
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--texto-mutado)" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle></svg>
+              Suporte a CarPlay e Android Auto
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao-feedback" id="feedback">
+    <div class="container">
+      <div class="secao-cabecalho">
+        <span class="secao-subtitulo-tag">Voz da Comunidade</span>
+        <h2 class="secao-titulo">Sugestões de Recursos & Relato de Bugs</h2>
+        <p style="color:var(--texto-secundario); max-width:640px; margin:12px auto 0;">
+          Você ajuda a construir o YSP! O formulário abaixo envia sua mensagem diretamente por e-mail para <strong>jonamikeafilho00@gmail.com</strong> e armazena sua contribuição no feed público.
+        </p>
+      </div>
+
+      <div class="feedback-grid">
+        <!-- Formulário Nativo FormSubmit para jonamikeafilho00@gmail.com -->
+        <div class="feedback-form-card">
+          <h3 style="font-size: 1.3rem; margin-bottom: 20px; font-weight: 700;">Envie seu Feedback</h3>
+
+          <form 
+            action="https://formsubmit.co/jonamikeafilho00@gmail.com" 
+            method="POST" 
+            id="formFeedback"
+          >
+            <!-- Configurações Ocultas do FormSubmit -->
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_subject" value="[YSP Feedback] Novo Relato de Bug ou Sugestao">
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-grupo">
+                <label for="campoNome">Seu Nome / Nick</label>
+                <input type="text" id="campoNome" name="Nome_ou_Nick" class="form-controle" placeholder="Ex: Jonas" required>
+              </div>
+              <div class="form-grupo">
+                <label for="campoEmail">Seu E-mail (opcional)</label>
+                <input type="email" id="campoEmail" name="Email_Contato" class="form-controle" placeholder="seu@email.com">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-grupo">
+                <label for="campoTipo">Tipo do Feedback</label>
+                <select id="campoTipo" name="Tipo_Feedback" class="form-controle" required>
+                  <option value="sugestao">💡 Sugestão / Ideia</option>
+                  <option value="bug">🐛 Relato de Bug / Erro</option>
+                  <option value="outro">💬 Outro Comentário</option>
+                </select>
+              </div>
+              <div class="form-grupo">
+                <label for="campoVersao">Versão do YSP</label>
+                <input type="text" id="campoVersao" name="Versao_YSP" class="form-controle" value="v1.0.1 (Windows)" required>
+              </div>
+            </div>
+
+            <div class="form-grupo">
+              <label for="campoTitulo">Título Resumido</label>
+              <input type="text" id="campoTitulo" name="Titulo_Relato" class="form-controle" placeholder="Ex: Adicionar modo escuro com tom roxo..." required>
+            </div>
+
+            <div class="form-grupo">
+              <label for="campoDescricao">Descrição Detalhada</label>
+              <textarea id="campoDescricao" name="Descricao_Detalhada" class="form-controle" placeholder="Descreva sua sugestão ou como reproduzir o erro encontrado com clareza..." required></textarea>
+            </div>
+
+            <button type="submit" id="btnEnviarFeedback" class="btn-acao btn-laranja" style="width: 100%; justify-content: center; padding: 14px; margin-top: 8px;">
+              Enviar Relato por E-mail
+            </button>
+          </form>
+
+          <div style="margin-top: 20px; text-align: center;">
+            <a href="https://github.com/jonasmikea/PROJETO_YSP/issues" target="_blank" rel="noopener" style="font-size: 0.85rem; color: var(--texto-secundario); text-decoration: underline;">
+              Ou prefere abrir uma Issue formal no repositório GitHub?
+            </a>
+          </div>
+        </div>
+
+        <!-- Feed Interativo de Feedbacks -->
+        <div>
+          <div class="feed-controles">
+            <span style="font-size: 0.95rem; font-weight: 700;">Feed da Comunidade (<span id="totalFeedbacks">0</span>)</span>
+            <div class="feed-filtros">
+              <button class="btn-filtro ativo" data-filtro="todos">Todos</button>
+              <button class="btn-filtro" data-filtro="sugestao">Sugestões</button>
+              <button class="btn-filtro" data-filtro="bug">Bugs</button>
+            </div>
+          </div>
+
+          <div class="feedback-feed" id="listaFeedbacks">
+            <!-- Renderizado dinamicamente via JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="rodape-principal">
+    <div class="container">
+      <div class="rodape-grid">
+        <div class="rodape-sobre">
+          <div class="logo-container" style="margin-bottom: 8px;">
+            <div class="logo-icone">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </div>
+            <div class="logo-texto">YOU SAVE <span>PLAY</span></div>
+          </div>
+          <p>
+            Software autônomo e de código aberto desenvolvido para download eficiente, organização de playlists e reprodução contínua de áudio e vídeo.
+          </p>
+        </div>
+
+        <div class="rodape-coluna">
+          <h5>Navegação</h5>
+          <ul>
+            <li><a href="#recursos">Recursos</a></li>
+            <li><a href="#mockup">Interface</a></li>
+            <li><a href="#mobile">Versão Mobile</a></li>
+            <li><a href="#roadmap">Roadmap</a></li>
+            <li><a href="#feedback">Bugs & Sugestões</a></li>
+          </ul>
+        </div>
+
+        <div class="rodape-coluna">
+          <h5>Download & Código</h5>
+          <ul>
+            <li>
+              <a href="https://github.com/jonasmikea/PROJETO_YSP/releases/download/v1.0.1/You-Save-Play-Setup-1.0.1.exe" download="You-Save-Play-Setup-1.0.1.exe" style="color:var(--laranja-neon); font-weight:700;">
+                Download Direto .EXE
+              </a>
+            </li>
+            <li><a href="https://github.com/jonasmikea/PROJETO_YSP" target="_blank" rel="noopener">Repositório GitHub</a></li>
+            <li><a href="https://github.com/jonasmikea/PROJETO_YSP/issues" target="_blank" rel="noopener">Rastreador de Issues</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rodape-copy">
+        Desenvolvido por Jonas Mikéa • Projeto de código aberto destinado a fins educacionais e uso pessoal.
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    const FEEDBACKS_PADRAO = [
+      {
+        id: "fb_1",
+        tipo: "sugestao",
+        titulo: "Adicionar temporizador para desligar o player (Sleep Timer)",
+        descricao: "Gostaria que o YSP tivesse uma opção para parar a reprodução após 30 ou 60 minutos, muito útil para ouvir antes de dormir.",
+        versao: "v1.0.1",
+        data: "12/10/2026",
+        votos: 14,
+        status: "Planejado"
+      },
+      {
+        id: "fb_2",
+        tipo: "bug",
+        titulo: "Travamento leve ao carregar mais de 80 vídeos em playlist",
+        descricao: "Ao colar uma playlist com mais de 80 itens, a renderização da lista inicial dá uma pequena engasgada de 1 segundo.",
+        versao: "v1.0.1",
+        data: "13/10/2026",
+        votos: 8,
+        status: "Em Análise"
+      },
+      {
+        id: "fb_3",
+        tipo: "sugestao",
+        titulo: "Equalizador de 10 bandas com presets de graves",
+        descricao: "Seria excelente ter equalizador gráfico nativo para realçar o grave das faixas MP3 direto no app.",
+        versao: "v1.0.1",
+        data: "13/10/2026",
+        votos: 21,
+        status: "Planejado"
+      }
+    ];
+
+    function carregarFeedbacks() {
+      const salvos = localStorage.getItem('ysp_feedbacks');
+      if (salvos) {
+        try {
+          return JSON.parse(salvos);
+        } catch (e) {
+          return FEEDBACKS_PADRAO;
+        }
+      }
+      localStorage.setItem('ysp_feedbacks', JSON.stringify(FEEDBACKS_PADRAO));
+      return FEEDBACKS_PADRAO;
+    }
+
+    function salvarFeedbacks(lista) {
+      localStorage.setItem('ysp_feedbacks', JSON.stringify(lista));
+    }
+
+    let feedbacksAtuais = carregarFeedbacks();
+    let filtroAtivo = "todos";
+
+    function exibirToast(mensagem) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast-card';
+      toast.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--laranja-neon)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span>${mensagem}</span>
+      `;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    function renderizarFeedbacks() {
+      const container = document.getElementById('listaFeedbacks');
+      const contador = document.getElementById('totalFeedbacks');
+      container.innerHTML = '';
+
+      let listaFiltrada = feedbacksAtuais;
+      if (filtroAtivo !== 'todos') {
+        listaFiltrada = feedbacksAtuais.filter(item => item.tipo === filtroAtivo);
+      }
+
+      contador.textContent = listaFiltrada.length;
+
+      if (listaFiltrada.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 40px; color: var(--texto-secundario); background: var(--bg-card); border-radius: 16px; border: 1px solid var(--borda-suave);">
+            Nenhum relato encontrado nesta categoria. Seja o primeiro a enviar!
+          </div>
+        `;
+        return;
+      }
+
+      listaFiltrada.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card-item-feedback';
+
+        let classeTag = 'tag-outro';
+        let rotuloTag = 'Comentário';
+        if (item.tipo === 'sugestao') {
+          classeTag = 'tag-sugestao';
+          rotuloTag = '💡 Sugestão';
+        } else if (item.tipo === 'bug') {
+          classeTag = 'tag-bug';
+          rotuloTag = '🐛 Bug';
+        }
+
+        let classeStatus = 'tag-analise';
+        if (item.status === 'Resolvido') classeStatus = 'tag-resolvido';
+
+        card.innerHTML = `
+          <div class="item-feedback-topo">
+            <span class="tag-status ${classeTag}">${rotuloTag}</span>
+            <span class="tag-status ${classeStatus}">${item.status || 'Em Análise'}</span>
+          </div>
+          <h4 class="item-feedback-titulo">${escapeHTML(item.titulo)}</h4>
+          <p class="item-feedback-desc">${escapeHTML(item.descricao)}</p>
+          <div class="item-feedback-rodape">
+            <span>Enviado em ${item.data} • ${item.versao}</span>
+            <button class="btn-votar" onclick="votarFeedback('${item.id}')">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+              </svg>
+              <span>${item.votos || 0}</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function escapeHTML(str) {
+      return (str || '').replace(/[&<>'"]/g, 
+        tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[tag] || tag)
+      );
+    }
+
+    window.votarFeedback = function(id) {
+      const item = feedbacksAtuais.find(f => f.id === id);
+      if (item) {
+        item.votos = (item.votos || 0) + 1;
+        salvarFeedbacks(feedbacksAtuais);
+        renderizarFeedbacks();
+        exibirToast("Voto computado com sucesso!");
+      }
+    };
+
+    // Antes de submeter o formulário nativo ao FormSubmit, salvamos a entrada no mural local
+    document.getElementById('formFeedback').addEventListener('submit', function() {
+      const tipo = document.getElementById('campoTipo').value;
+      const titulo = document.getElementById('campoTitulo').value.trim();
+      const desc = document.getElementById('campoDescricao').value.trim();
+      const versao = document.getElementById('campoVersao').value.trim();
+
+      if (titulo && desc) {
+        const novo = {
+          id: "fb_" + Date.now(),
+          tipo: tipo,
+          titulo: titulo,
+          descricao: desc,
+          versao: versao || "v1.0.1",
+          data: new Date().toLocaleDateString('pt-BR'),
+          votos: 1,
+          status: "Em Análise"
+        };
+        feedbacksAtuais.unshift(novo);
+        salvarFeedbacks(feedbacksAtuais);
+      }
+    });
+
+    document.getElementById('formMobile').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('emailMobile').value.trim();
+      if (!email) return;
+
+      const listaInscritos = JSON.parse(localStorage.getItem('ysp_mobile_subscribers') || '[]');
+      if (!listaInscritos.includes(email)) {
+        listaInscritos.push(email);
+        localStorage.setItem('ysp_mobile_subscribers', JSON.stringify(listaInscritos));
+      }
+
+      this.reset();
+      exibirToast("Pronto! Você será avisado quando o APK for disponibilizado.");
+    });
+
+    document.querySelectorAll('.btn-filtro').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.btn-filtro').forEach(b => b.classList.remove('ativo'));
+        this.classList.add('ativo');
+        filtroAtivo = this.dataset.filtro;
+        renderizarFeedbacks();
+      });
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderizarFeedbacks();
+    });
+  </script>
+</body>
 </html>
