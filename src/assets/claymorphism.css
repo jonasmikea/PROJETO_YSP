@@ -1,0 +1,506 @@
+:root {
+  --fundo-base: #fff2ea;
+  --argila-card: #ffe8dd;
+  --argila-azul: #d5edfa;
+  --argila-pessego: #f89d7c;
+  --argila-pessego-claro: #ffd4c4;
+  --sombra-escura: rgba(212, 168, 150, 0.45);
+  --luz-branca: rgba(255, 255, 255, 0.85);
+  --texto-principal: #423b38;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--texto-principal);
+}
+
+body {
+  background-color: var(--fundo-base);
+  overflow-x: hidden;
+  user-select: none;
+}
+
+.aplicativo-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Base dos Botões em Claymorphism */
+.botao-argila {
+  background-color: var(--argila-pessego-claro);
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  padding: 12px 24px;
+  box-shadow: 
+    6px 6px 14px var(--sombra-escura),
+    -6px -6px 14px var(--luz-branca),
+    inset -3px -3px 6px rgba(200, 140, 120, 0.35),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.9);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.botao-argila:active {
+  transform: scale(0.96);
+  box-shadow: 
+    2px 2px 6px var(--sombra-escura),
+    -2px -2px 6px var(--luz-branca),
+    inset 3px 3px 6px rgba(200, 140, 120, 0.4);
+}
+
+/* Cabeçalho */
+.cabecalho-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 40px;
+}
+
+.logo-texto {
+  font-size: 24px;
+  font-weight: 900;
+  color: #ff6842;
+  cursor: pointer;
+}
+
+.logo-texto span {
+  font-size: 14px;
+  font-weight: normal;
+  color: #8e807a;
+}
+
+/* Tela 1: Início / Hub */
+.tela-hub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 40px;
+}
+
+.titulo-destaque {
+  font-size: 42px;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.subtitulo-destaque {
+  text-align: center;
+  color: #8c7e78;
+}
+
+.grade-botoes-hub {
+  display: flex;
+  gap: 40px;
+}
+
+.cartao-acao {
+  width: 180px;
+  height: 180px;
+  border-radius: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.cartao-acao.roxo {
+  background-color: #eedeff;
+}
+
+.icone-grande {
+  font-size: 48px;
+}
+
+.rotulo-acao {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Tela 2: Busca */
+.tela-busca {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 25px;
+}
+
+.barra-pesquisa-pilula {
+  display: flex;
+  align-items: center;
+  width: 550px;
+  background-color: var(--argila-card);
+  border-radius: 50px;
+  padding: 8px 12px;
+  box-shadow: 
+    8px 8px 18px var(--sombra-escura),
+    -8px -8px 18px var(--luz-branca),
+    inset -3px -3px 6px rgba(212, 168, 150, 0.4),
+    inset 3px 3px 6px var(--luz-branca);
+}
+
+.input-argila {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 12px 18px;
+  font-size: 15px;
+  outline: none;
+}
+
+.botao-lupa {
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.link-voltar {
+  background: none;
+  border: none;
+  color: #92837d;
+  cursor: pointer;
+}
+
+/* Tela 3: Resultados */
+.tela-resultados {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.barra-ferramentas-resultados {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alternador-formato {
+  display: flex;
+  background: var(--argila-card);
+  border-radius: 30px;
+  padding: 4px;
+}
+
+.botao-pilula {
+  border: none;
+  background: transparent;
+  padding: 8px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.botao-pilula.ativo {
+  background: var(--argila-pessego);
+  color: white;
+  box-shadow: 2px 2px 6px var(--sombra-escura);
+}
+
+.lista-resultados {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card-resultado-argila {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--argila-azul);
+  border-radius: 20px;
+  padding: 14px 20px;
+  box-shadow: 
+    4px 4px 10px var(--sombra-escura),
+    -4px -4px 10px var(--luz-branca),
+    inset -2px -2px 4px rgba(160, 200, 220, 0.5),
+    inset 2px 2px 4px var(--luz-branca);
+}
+
+.rodape-acoes-download {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+/* Tela 4: Player */
+.tela-player-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: 1fr 90px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar-argila {
+  background-color: #ffd8c7;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: inset -4px 0 8px rgba(220, 160, 140, 0.3);
+}
+
+.logo-player {
+  font-weight: 900;
+  color: #ff6842;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.menu-navegacao {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item-menu {
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 10px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.item-menu.ativo {
+  background-color: var(--argila-pessego);
+  color: white;
+  box-shadow: 3px 3px 6px rgba(200, 100, 70, 0.3);
+}
+
+.divisor-suave {
+  height: 1px;
+  background-color: rgba(200, 140, 120, 0.2);
+}
+
+.rotulo-subsecao {
+  font-size: 12px;
+  font-weight: bold;
+  color: #7a6e69;
+}
+
+.lista-playlists {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.botao-criar-playlist {
+  margin-top: 15px;
+  font-size: 13px;
+  width: 100%;
+}
+
+.conteudo-principal-player {
+  padding: 24px 32px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.topo-player {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-argila-pequeno {
+  background: var(--argila-card);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  box-shadow: inset 2px 2px 4px var(--sombra-escura);
+  outline: none;
+}
+
+.grade-musicas {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.card-musica-argila {
+  background-color: var(--argila-azul);
+  border-radius: 24px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 
+    5px 5px 12px var(--sombra-escura),
+    -5px -5px 12px var(--luz-branca);
+}
+
+.capa-musica-vinil {
+  width: 44px;
+  height: 44px;
+  background: #ffc4af;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-musica {
+  flex: 1;
+}
+
+.nome-faixa {
+  display: block;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.artista-faixa {
+  font-size: 12px;
+  color: #726b68;
+}
+
+.botao-coracao {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.player-rodape-argila {
+  grid-column: 1 / -1;
+  background-color: #ff9f7d;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  box-shadow: 0 -4px 14px rgba(200, 110, 80, 0.3);
+}
+
+.faixa-atual {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.capa-mini {
+  width: 44px;
+  height: 44px;
+  background: #fff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.controles-centrais {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.botoes-midia {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.btn-ctrl {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.play-destaque {
+  font-size: 22px;
+}
+
+.barra-tempo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.trilho-progresso {
+  width: 280px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.controle-volume {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trilho-volume {
+  width: 80px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.preenchimento {
+  height: 100%;
+  background: #ffffff;
+  border-radius: 10px;
+}
+
+/* Modal de Configurações */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+}
+
+.card-configuracoes-argila {
+  width: 420px;
+  background-color: var(--fundo-base);
+  border-radius: 30px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.campo-config {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.select-argila {
+  padding: 10px;
+  border-radius: 14px;
+  border: none;
+  background: var(--argila-card);
+  outline: none;
+}
